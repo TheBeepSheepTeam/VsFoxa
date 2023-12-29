@@ -1194,10 +1194,10 @@ class PlayState extends MusicBeatState
 		}
 
 		scoreTxt.text = 'Score: ${songScore}'
-		+ ' | Combos: ${combo}'
-		+ (!instakillOnMiss ? ' | Misses: ${songMisses}' : "")
-		+ ' | Health: ${health}'
-		+ ' | Rating: ${str}';
+		+ ' // Combos: ${combo}'
+		+ (!instakillOnMiss ? ' // Misses: ${songMisses}' : "")
+		+ ' // Health: ${health}'
+		+ ' // Rating: ${str}';
 
 		if (!miss && !cpuControlled)
 			doScoreBop();
@@ -1648,13 +1648,8 @@ class PlayState extends MusicBeatState
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
 	var freezeCamera:Bool = false;
-	var allowDebugKeys:Bool = true;
-
 	override public function update(elapsed:Float)
 	{
-		if(SONG.disableDebugButtons == false) allowDebugKeys = true;
-		else allowDebugKeys = false;
-
 		if(!inCutscene && !paused && !freezeCamera) {
 			FlxG.camera.followLerp = 2.4 * cameraSpeed * playbackRate;
 			if(!startingSong && !endingSong && boyfriend.getAnimationName().startsWith('idle')) {
@@ -1688,7 +1683,7 @@ class PlayState extends MusicBeatState
 			if(ret != FunkinLua.Function_Stop) openPauseMenu();
 		}
 
-        if(!endingSong && !inCutscene && allowDebugKeys)
+        if(!endingSong && !inCutscene && !SONG.disableDebugButtons)
 		{
 			if (controls.justPressed('debug_1'))
 				openChartEditor();
@@ -2891,6 +2886,7 @@ class PlayState extends MusicBeatState
 		combo = 0;
 
 		health -= subtract * healthLoss;
+		trace('health loss from ' + subtract * healthLoss);
 		if(!practiceMode) songScore -= 10;
 		if(!endingSong) songMisses++;
 		totalPlayed++;
@@ -3026,7 +3022,6 @@ class PlayState extends MusicBeatState
 		}
 		else strumPlayAnim(false, Std.int(Math.abs(note.noteData)), Conductor.stepCrochet * 1.25 / 1000 / playbackRate);
 		vocals.volume = 1;
-
 
 		if(sustainNoteHeal == true){
 			if(!note.isSustainNote){

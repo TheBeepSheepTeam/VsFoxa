@@ -808,11 +808,12 @@ class EditorPlayState extends MusicBeatSubstate
 			return;
 		}
 
-		if (!note.isSustainNote)
-		{
-			combo++;
-			if(combo > 9999) combo = 9999;
-			popUpScore(note);
+		if(PlayState.instance.sustainNoteHeal == true){
+			if(!note.isSustainNote){
+				combo++;
+				if(combo > 9999) combo = 9999;
+				popUpScore(note);
+			}
 		}
 
 		var spr:StrumNote = playerStrums.members[note.noteData];
